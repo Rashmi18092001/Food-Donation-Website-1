@@ -1,0 +1,2 @@
+Food Donation Website
+This project is to help hungry people get food which is being wasted. The food donor can donate their food by filling the details required to donate food and after submitting the form it will create a post for that food and the hungry person can search for the food by  filling some basic information. The food post will include the owner's name, address, contact number, food description showing the food items which are remained, quantity of food, prepared food date. These details are saved in the MongoDB through RESTful API.
