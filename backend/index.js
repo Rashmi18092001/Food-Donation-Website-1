@@ -1,139 +1,34 @@
-const express= require('express')
-const mongoose= require('mongoose')
-const cors = require('cors')
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+require('dotenv').config();
 
-const app=express()
+const app = express();
 
-app.use(cors())
+// Middleware
+app.use(bodyParser.json());
+app.use(cors()); // Allow cross-origin requests
 
-app.use(express.json())
-
-app.use(express.urlencoded(
-    {
-        extened:true
-    }
-))
-
-mongoose.connect('mongodb://127.0.0.1:27017/donationDetail',{
-    useNewUrlParser:true,
-    useUnifiedTopology:true
+// MongoDB connection
+const db = 'mongodb://127.0.0.1:27017/FoodDonation';
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 })
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log(err));
 
-var db = mongoose.connection
+// Use routes
+const donate = require('./routes/donateRoute');
+const hungerSpot = require('./routes/hungerSpotRoute');
+const auth = require('./routes/auth');
+const protectedRoute = require('./routes/protectedRoute'); // Add this line
 
-db.once('open',()=>{
-    console.log('Database started')
-})
+app.use('/api/donate', donate);
+app.use('/api/hungerSpot', hungerSpot);
+app.use('/api/auth', auth);
+app.use('/api/protected', protectedRoute); // Add this line
 
-
-const dataschema = new mongoose.Schema({
-    name:String,
-    address : String,
-    contact : Number,
-    foodDesc : String,
-    quantity : Number,
-    foodDate : Date,
-
-})
-
-const datamodel = mongoose.model('details',dataschema)
-
-app.get('/myapi',async(req,res)=>{
-    try{
-
-        const item = await datamodel.find()
-        res.json(item)
-        res.status(201)
-
-    }
-    catch(error){
-        console.log(error)
-        res.json({message:error.message})
-    }
-})
-
-
-app.get('/myapi/:id',async(req,res)=>{
-    try{
-        const{id}=req.params
-        const item = await datamodel.findById(id)
-        res.json(item)
-        res.status(201)
-
-    }
-    catch(error){
-        console.log(error)
-        res.json({message:error.message})
-    }
-})
-
-
-
-app.post('/myapi',async (req,res)=>{
-    try{
-
-        const {name,address, contact,foodDesc,quantity,foodDate}=req.body;
-
-        const item = new datamodel({name,address, contact,foodDesc,quantity,foodDate})
-
-        await item.save() 
-
-        
-        res.status(201)
-        res.json(item)
-
-    }catch(error){
-        console.log(error)
-        res.json({message:error.message})
-    }
-})
-
-
-
-app.put('/myapi/:id',async(req,res)=>{
-    try{
-        const {name,address, contact,foodDesc,quantity,foodDate}=req.body;
-        const {id} = req.params
-
-        const item = await datamodel.findById(id)
-
-        if (!item) {
-            return res.status(404).json({ message: 'Data not found' });
-        }
-
-        Object.assign(item, { cname, checkin, checkout, room, adult, child, email, phone });
-        await item.save();
-        res.json(item);        
-
-    }catch(error){
-        console.log(error)
-        res.json({message:error.message})
-    }
-})
-
-
-app.delete('/myapi/:id',async(req,res)=>{
-    try{
-        const {id}=req.params;
-
-        const item = await datamodel.findById(id)
-
-        if(!item){ 
-            res.status(404).json({message:'Data not found'})
-        }
-
-            await item.deleteOne()
-
-            res.status(201).json({message:'Data deleted'})
-
-    }catch(error){
-        console.log(error)
-        res.json({message:error.message})
-    }
-})
-
-
-
-app.listen(8082,()=>{
-    console.log('server started')
-})
+const port = 8082;
+app.listen(port, () => console.log(`Server running on port ${port}`));
