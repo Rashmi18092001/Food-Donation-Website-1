@@ -21,4 +21,4 @@ Filling this from will enable user to search the food.
 ![Hunger-spot form](https://github.com/Rashmi18092001/Food-Donation-Website/assets/117255309/a6145050-2b39-4623-94b3-8e70662e2646)
 
 Food that is booked will show the details in bookings page.
-![Bookings](https://github.com/Rashmi18092001/Food-Donation-Website/assets/117255309/bd9e7864-55d8-4285-8a5c-54a2d926f6f4)
+![Bookings](https://github.com/Rashmi18092001/Food-Donation-Website/assets/117255309/fc8b75ab-76d3-4d9d-91c6-cdd54b099b6c)
